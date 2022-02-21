@@ -7,9 +7,10 @@ public class ClientesVentanilla {
 	private int img_bw;
 	private int img_color_;
 	private int img_bw_;
+	private int pasos_sistema;
 	private String nombre_cliente;
 
-	public ClientesVentanilla(int id_cliente,int id_ventanilla,String nombre_cliente, int img_color,int img_bw,int img_color_,int img_bw_) {
+	public ClientesVentanilla(int id_cliente,int id_ventanilla,String nombre_cliente, int img_color,int img_bw,int img_color_,int img_bw_,int pasos_sistema) {
 			this.id_cliente=id_cliente;
 			this.id_ventanilla=id_ventanilla;
 			this.img_color=img_color;
@@ -17,7 +18,7 @@ public class ClientesVentanilla {
 			this.img_bw=img_bw;
 			this.img_bw_=img_bw_;
 			this.img_color_=img_color_;
-
+			this.pasos_sistema=pasos_sistema;
 		}
 
 	public int getIDCliente() {
@@ -75,6 +76,14 @@ public class ClientesVentanilla {
 
 	public void setNombreCliente(String nombre_cliente) {
 		this.nombre_cliente = nombre_cliente;
+	}
+	
+	public int getPasosSistema() {
+		return pasos_sistema;
+	}
+
+	public void setPasosSistema(int pasos_sistema) {
+		this.pasos_sistema = pasos_sistema;
 	}
 
 }

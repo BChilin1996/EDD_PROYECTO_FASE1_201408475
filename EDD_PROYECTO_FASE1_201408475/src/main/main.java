@@ -101,9 +101,10 @@ public class main {
 							String img_bw_ = (String) arr.get("img_bw");
 							Clientes cliente = new Clientes(Integer.parseInt(id_cliente_), nombre_cliente_,
 									Integer.parseInt(img_color_), Integer.parseInt(img_bw_),
-									Integer.parseInt(img_color_), Integer.parseInt(img_bw_));
+									Integer.parseInt(img_color_), Integer.parseInt(img_bw_),0);
 							colaCliente.insertar(cliente);
 							colaClienteHistorico.insertar(cliente);
+					
 						}
 
 					} catch (FileNotFoundException e) {
@@ -172,19 +173,20 @@ public class main {
 					ClientesVentanilla cola_cliente = new ClientesVentanilla(id_primer_cliente_cola,
 							id_primer_ventanilla, colaCliente.obtenerPrimero().getNombreCliente(),
 							colaCliente.obtenerPrimero().getImgColor(), colaCliente.obtenerPrimero().getImgBw(),
-							colaCliente.obtenerPrimero().getImgColor(), colaCliente.obtenerPrimero().getImgBw());
+							colaCliente.obtenerPrimero().getImgColor(), colaCliente.obtenerPrimero().getImgBw(),0);
 					PilaImagenes pila = new PilaImagenes();
 					clientesVentanilla.insertar(cola_cliente, pila);
 					colaCliente.extraer();
 					System.out.println("---- Cliente --- " + cola_cliente.getIDCliente() + " Se movió a la ventanilla "
 							+ id_primer_ventanilla);
+					clientesVentanilla.agregar_nodo_cliente(cola_cliente.getIDCliente());
 					// Se genera un cliente aleatorio
 					ClientesAgregados = ClientesAgregados + 1;
 					int id_cliente_aleatorio = (int) (ClientesAgregados);
 					int img_color = (int) (Math.random() * 20 + 1);
 					int img_blanco_negro = (int) (Math.random() * 20 + 1);
 					Clientes cliente = new Clientes(id_cliente_aleatorio, "Cliente Aleatorio # " + id_cliente_aleatorio,
-							img_color, img_blanco_negro, img_color, img_blanco_negro);
+							img_color, img_blanco_negro, img_color, img_blanco_negro,0);
 					colaCliente.insertar(cliente);
 					listaVentanilla.borrar(id_primer_ventanilla);
 					total_pasos_ejecutados = total_pasos_ejecutados + 1;
@@ -195,6 +197,7 @@ public class main {
 
 				if (VentanillasOcupadas >= 1 && total_pasos_ejecutados > 1) {
 					clientesVentanilla.AgregarImagenNodo(ventanilla_llenas);
+				
 				}
 
 				break;
@@ -237,8 +240,9 @@ public class main {
 				System.out.println("######### Ingrese el reporte que desea generar #########");
 				System.out.println("######### 1. Top 5 Clientes con Mayor Cantidad de Imágenes a Color #########");
 				System.out.println("######### 2. Top 5 Clientes con Mayor Cantidad de Imágenes en Blanco y Negro #########");
-				System.out.println("######### 3. Clientes que mas pasos estuvo en el Sistema #########");
+				System.out.println("######### 3. Ver Pasos de todos los Clientes #########");
 				System.out.println("######### 4. Buscar Cliente #########");
+				System.out.println("######### 5. Datos del Cliente con Mas Pasos #########");
 				System.out.print("Ingrese una Opción: ");
 				int opcion_menu_estado_actual_reportes = sc.nextInt();
 				switch (opcion_menu_estado_actual_reportes) {
@@ -250,10 +254,19 @@ public class main {
 				case 2:
 					colaClienteHistorico.ordenar_clientes_blanco_negro();
 					break;
+				case 3:
+					String str_ = clientesVentanilla.imprimir_pasos();
+					System.out.println(str_);
+					break;
 				case 4:
 					System.out.print("######### Ingrese el ID del Cliente a Buscar #########");
 					int id_cliente_buscar = sc.nextInt();
 					colaCliente.buscar_cliente(id_cliente_buscar);
+					break;
+				case 5:
+					int str__ =0;
+					str__ = clientesVentanilla.imprimir_con_mas_pasos();
+					colaCliente.buscar_cliente(str__);
 					break;
 				default:
 					System.out.println("######### Ingrese otra Opción #########");

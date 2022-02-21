@@ -4,15 +4,17 @@ import models.Clientes;
 import models.ClientesVentanilla;
 import models.ColaImpresiones;
 import models.Impresoras;
+import models.PasosClientes;
 import nodos.NodoColaClientes;
 import nodos.NodoColaClientesVentanilla;
 
 public class ColaClientesVentanilla {
 	private NodoColaClientesVentanilla inicio;
 	private NodoColaClientesVentanilla termino;
+
 	// Se crean las impresoras disponibles
 	ColaImpresion cImpresionColor = new ColaImpresion();
-
+	ColaPasosClientes cola_pasos = new ColaPasosClientes();
 	ColaImpresion cImpresionBlancoNegro = new ColaImpresion();
 
 	
@@ -38,6 +40,24 @@ public class ColaClientesVentanilla {
 		termino = termino.getNext();
 	}
 
+	public String agregar_nodo_cliente(int id_cliente) {
+		PasosClientes pasos = new PasosClientes(id_cliente,1);
+		cola_pasos.insertar(pasos);
+		return "";
+	}
+	
+	public String imprimir_pasos() {
+		String str_="";
+		str_= cola_pasos.toString();
+		return str_;
+	}
+	
+	public int imprimir_con_mas_pasos() {
+		int id_cliente_mas_pasos =0;
+		id_cliente_mas_pasos = cola_pasos.toStringMasPasos();
+		return id_cliente_mas_pasos;
+	}
+	
 	public NodoColaClientesVentanilla buscar_cliente(int id_cliente) {
 		NodoColaClientesVentanilla c = this.inicio;
 		while (c != null) {
@@ -134,7 +154,6 @@ public class ColaClientesVentanilla {
 	}
 
 	public String AgregarImagenNodo(boolean ventanilla_llenas) {
-		
 		String s = "";
 		if (ventanilla_llenas == true) {
 			NodoColaClientesVentanilla c = this.inicio;
@@ -144,6 +163,8 @@ public class ColaClientesVentanilla {
 					System.out.println("La ventanilla # " + c.getDato().getIdVentanilla() + " Recibió una Imágen en Blanco y Negro del Cliente "+c.getDato().getIDCliente());
 					ClientesVentanilla cliente_ = buscar_cliente_modelo(c.getDato().getIDCliente());
 					cliente_.setImgBw(c.getDato().getImgBw() - 1);
+					cliente_.setPasosSistema(c.getDato().getPasosSistema()+1);
+					cola_pasos.SumarPaso(c.getDato().getIDCliente());
 					c.setDato(cliente_);
 				} else {
 					if (c.getDato().getImgColor() > 0) {
@@ -151,6 +172,8 @@ public class ColaClientesVentanilla {
 						System.out.println("La ventanilla # " + c.getDato().getIdVentanilla() + " Recibió una Imágen a Color del Cliente "+c.getDato().getIDCliente());
 						ClientesVentanilla cliente_ = buscar_cliente_modelo(c.getDato().getIDCliente());
 						cliente_.setImgColor(c.getDato().getImgColor() - 1);
+						cliente_.setPasosSistema(c.getDato().getPasosSistema()+1);
+						cola_pasos.SumarPaso(c.getDato().getIDCliente());
 						c.setDato(cliente_);
 					}
 				}
@@ -165,14 +188,18 @@ public class ColaClientesVentanilla {
 					System.out.println("La ventanilla # " + c.getDato().getIdVentanilla() + " Recibió una Imágen en Blanco y Negro del Cliente "+c.getDato().getIDCliente());
 					ClientesVentanilla cliente_ = buscar_cliente_modelo(c.getDato().getIDCliente());
 					cliente_.setImgBw(c.getDato().getImgBw() - 1);
+					cola_pasos.SumarPaso(c.getDato().getIDCliente());
 					c.setDato(cliente_);
+				
 				} else {
 					if (c.getDato().getImgColor() > 0) {
 						insertar_pila(c.getDato().getIDCliente(), c.getDato().getImgColor()+2000);
 						System.out.println("La ventanilla # " + c.getDato().getIdVentanilla() + " Recibió una Imágen a Color del Cliente "+c.getDato().getIDCliente());
 						ClientesVentanilla cliente_ = buscar_cliente_modelo(c.getDato().getIDCliente());
 						cliente_.setImgColor(c.getDato().getImgColor() - 1);
+						cola_pasos.SumarPaso(c.getDato().getIDCliente());
 						c.setDato(cliente_);
+						
 					}
 				}
 
@@ -188,6 +215,7 @@ public class ColaClientesVentanilla {
 			while (c.getNext() != null) {
 				if (c.getDato().getImgBw() == 0 && c.getDato().getImgColor()==0) {
 					System.out.println("#### El Cliente "+c.getDato().getIDCliente()+"-"+c.getDato().getNombreCliente()+" Termino de Entregar Trabajos Impresion y el Cliente se Envió a la Lista de Espera #####");
+					cola_pasos.SumarPaso(c.getDato().getIDCliente());
 					for(int i = 1; i <= c.getDato().getImgBw_(); i = i+1)
 					{
 						ColaImpresiones cola_impresion_blanco = new ColaImpresiones(c.getDato().getIDCliente(),i);
@@ -200,7 +228,7 @@ public class ColaClientesVentanilla {
 					}
 					PilaImagenes pila_cliente_espera = new PilaImagenes();
 					Clientes clientes_espera = new Clientes(c.getDato().getIDCliente(),c.getDato().getNombreCliente(),
-							c.getDato().getImgColor(),c.getDato().getImgBw(),c.getDato().getImgColor(),c.getDato().getImgBw());
+							c.getDato().getImgColor(),c.getDato().getImgBw(),c.getDato().getImgColor(),c.getDato().getImgBw(),0);
 					lista_doble_enlazada.insertar(c.getDato().getIDCliente(), clientes_espera, pila_cliente_espera);
 					
 					extraer_id_cliente(c.getDato().getIDCliente());
@@ -222,12 +250,16 @@ public class ColaClientesVentanilla {
 			System.out.println("Se Imprime una Imagen a Blanco y Negro del Cliente "+cliente_blanco_negro.getIDCliente());
 			lista_doble_enlazada.insertar_pila(cliente_blanco_negro.getIDCliente(),cliente_blanco_negro.getIDImpresion());
 			cImpresionBlancoNegro.extraer();
+			cola_pasos.SumarPaso(cliente_blanco_negro.getIDCliente());
+		
 		}
 		if (cImpresionColor.contar()>1) {
 			ColaImpresiones cliente_color = cImpresionColor.obtener_primero();
 			System.out.println("Se Imprime una Imagen a Color del Cliente "+cliente_color.getIDCliente());
 			lista_doble_enlazada.insertar_pila(cliente_color.getIDCliente(),cliente_color.getIDImpresion());
 			cImpresionColor.extraer();
+			cola_pasos.SumarPaso(cliente_color.getIDCliente());
+			
 		}
 		
 		return s;
@@ -245,6 +277,7 @@ public class ColaClientesVentanilla {
 				    pendientes_blanco_negro = cImpresionBlancoNegro.contar_pendientes(Integer.parseInt(parts[i]));
 				    if (pendientes_color==0 && pendientes_blanco_negro==0) {
 				    	System.out.println("#### El Cliente  "+ parts[i] +" Termino sus impresiones #####");
+				    	cola_pasos.SumarPaso(Integer.parseInt(parts[i]));
 				    	lista_doble_enlazada.borrar(Integer.parseInt(parts[i]));
 				    }
 				    

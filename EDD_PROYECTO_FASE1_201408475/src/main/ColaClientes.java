@@ -240,6 +240,25 @@ public class ColaClientes {
 		return contador;
 	}
 
+	
+	public String buscar_cliente(int id_cliente) {
+		String str_ ="";
+		NodoColaClientes c = this.inicio;
+		while (c != null) {
+			if (c.getDato().getIDCliente()==id_cliente) {
+				System.out.println("ID Cliente: " + c.getDato().getIDCliente());
+				System.out.println("Nombre Cliente: " + c.getDato().getNombreCliente());
+				System.out.println("Imagenes a Color Iniciales: " + c.getDato().getImgColor());
+				System.out.println("Imagenes a Blanco y Negro Iniciales: " + c.getDato().getImgBw());
+				System.out.println("Imagenes a Pendientes de Imprimir a Color: " + c.getDato().getImgColor_());
+				System.out.println("Imagenes a Pendientes de Imprimir a Blanco y Negro: " + c.getDato().getImgBw_());
+			}
+			c = c.getNext();
+		}
+		return str_;
+	}
+
+	
 	public String toString() {
 		String str_ = "";
 		NodoColaClientes c = this.inicio;

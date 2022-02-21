@@ -250,6 +250,11 @@ public class main {
 				case 2:
 					colaClienteHistorico.ordenar_clientes_blanco_negro();
 					break;
+				case 4:
+					System.out.print("######### Ingrese el ID del Cliente a Buscar #########");
+					int id_cliente_buscar = sc.nextInt();
+					colaCliente.buscar_cliente(id_cliente_buscar);
+					break;
 				default:
 					System.out.println("######### Ingrese otra Opción #########");
 				}
@@ -318,7 +323,7 @@ public class main {
 
 	public static String imprimir_ventanillas_libres(String string_ventanilla) {
 		try {
-			PrintWriter writer = new PrintWriter("C:\\Temp\\grafo.txt", "UTF-8");
+			PrintWriter writer = new PrintWriter("C:\\Temp\\grafo2.txt", "UTF-8");
 
 			writer.println("digraph G {" + "graph [\r\n" + "rankdir = \"LR\"\r\n" + "];\r\n" + "node [\r\n"
 					+ "fontsize = \"16\"\r\n" + "shape = \"ellipse\"\r\n" + "];\r\n" + "edge [\r\n" + "];");
@@ -330,8 +335,8 @@ public class main {
 
 				String dotPath = "C:\\Program Files\\Graphviz\\bin\\dot.exe";
 
-				String fileInputPath = "C:\\Temp\\grafo.txt";
-				String fileOutputPath = "C:\\Temp\\grafo.jpg";
+				String fileInputPath = "C:\\Temp\\grafo2.txt";
+				String fileOutputPath = "C:\\Temp\\grafo2.jpg";
 
 				String tParam = "-Tjpg";
 				String tOParam = "-o";
@@ -357,7 +362,7 @@ public class main {
 		}
 
 		try {
-			File file = new File("C:\\\\Temp\\\\grafo.jpg");
+			File file = new File("C:\\\\Temp\\\\grafo2.jpg");
 			if (!Desktop.isDesktopSupported()) {
 				System.out.println("not supported");
 				return "Error";
@@ -374,63 +379,6 @@ public class main {
 	}
 
 	public static String imprimir_ventanillas_cola(String string_ventanilla) {
-		try {
-			PrintWriter writer = new PrintWriter("C:\\Temp\\grafo.txt", "UTF-8");
-
-			writer.println("digraph G {" + "graph [\r\n" + "rankdir = \"LR\"\r\n" + "];\r\n" + "node [\r\n"
-					+ "fontsize = \"16\"\r\n" + "shape = \"ellipse\"\r\n" + "];\r\n" + "edge [\r\n" + "];");
-			writer.println(string_ventanilla);
-			writer.println("}");
-
-			writer.close();
-			try {
-
-				String dotPath = "C:\\Program Files\\Graphviz\\bin\\dot.exe";
-
-				String fileInputPath = "C:\\Temp\\grafo.txt";
-				String fileOutputPath = "C:\\Temp\\grafo.jpg";
-
-				String tParam = "-Tjpg";
-				String tOParam = "-o";
-
-				String[] cmd = new String[5];
-				cmd[0] = dotPath;
-				cmd[1] = tParam;
-				cmd[2] = fileInputPath;
-				cmd[3] = tOParam;
-				cmd[4] = fileOutputPath;
-
-				Runtime rt = Runtime.getRuntime();
-
-				rt.exec(cmd);
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			} finally {
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			File file = new File("C:\\\\Temp\\\\grafo.jpg");
-			if (!Desktop.isDesktopSupported()) {
-				System.out.println("not supported");
-				return "Error";
-			}
-			Desktop desktop = Desktop.getDesktop();
-			if (file.exists())
-				desktop.open(file);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return "Se Imprimió el reportes";
-
-	}
-
-	public static String imprimir_ventanillas_estado(String string_ventanilla) {
 		try {
 			PrintWriter writer = new PrintWriter("C:\\Temp\\grafo3.txt", "UTF-8");
 
@@ -487,7 +435,7 @@ public class main {
 
 	}
 
-	public static String imprimir_ventanillas_lista_espera(String string_ventanilla) {
+	public static String imprimir_ventanillas_estado(String string_ventanilla) {
 		try {
 			PrintWriter writer = new PrintWriter("C:\\Temp\\grafo4.txt", "UTF-8");
 
@@ -529,6 +477,63 @@ public class main {
 
 		try {
 			File file = new File("C:\\\\Temp\\\\grafo4.jpg");
+			if (!Desktop.isDesktopSupported()) {
+				System.out.println("not supported");
+				return "Error";
+			}
+			Desktop desktop = Desktop.getDesktop();
+			if (file.exists())
+				desktop.open(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "Se Imprimió el reportes";
+
+	}
+
+	public static String imprimir_ventanillas_lista_espera(String string_ventanilla) {
+		try {
+			PrintWriter writer = new PrintWriter("C:\\Temp\\grafo5.txt", "UTF-8");
+
+			writer.println("digraph G {" + "graph [\r\n" + "rankdir = \"LR\"\r\n" + "];\r\n" + "node [\r\n"
+					+ "fontsize = \"16\"\r\n" + "shape = \"ellipse\"\r\n" + "];\r\n" + "edge [\r\n" + "];");
+			writer.println(string_ventanilla);
+			writer.println("}");
+
+			writer.close();
+			try {
+
+				String dotPath = "C:\\Program Files\\Graphviz\\bin\\dot.exe";
+
+				String fileInputPath = "C:\\Temp\\grafo5.txt";
+				String fileOutputPath = "C:\\Temp\\grafo5.jpg";
+
+				String tParam = "-Tjpg";
+				String tOParam = "-o";
+
+				String[] cmd = new String[5];
+				cmd[0] = dotPath;
+				cmd[1] = tParam;
+				cmd[2] = fileInputPath;
+				cmd[3] = tOParam;
+				cmd[4] = fileOutputPath;
+
+				Runtime rt = Runtime.getRuntime();
+
+				rt.exec(cmd);
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			} finally {
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			File file = new File("C:\\\\Temp\\\\grafo5.jpg");
 			if (!Desktop.isDesktopSupported()) {
 				System.out.println("not supported");
 				return "Error";
